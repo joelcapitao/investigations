@@ -23,21 +23,38 @@ Currently, ignition does not support encrypting the disk using trustee (see this
 [RFC](https://github.com/coreos/ignition/issues/2099) for more details). Therefore, we need to build a custom initramfs
 which contains the trustee attester, and the KBS information hardcoded in the setup script.
 
-Build the Fedora CoreOS or Centos Stream CoreOS image with the custom initrd:
+Build the Fedora CoreOS, CentOS Stream CoreOS, or Red Hat CoreOS image with the custom initrd:
 ```bash
 cd coreos
-# Fedora CoreOS image (qemu)
-just build oci-archive init build-qemu
-# Fedora CoreOS image for Azure
-just build oci-archive init azure
-# Centos Stream CoreOS image (qemu)
-just os=scos \
-     [kbc_image="$KBC_IMAGE"] \
-     [clevis_pin_trustee_image="$CLEVIS_PIN_IMAGE"] \
-     [ignition_image="$IGNITION_IMAGE"] \
-     build oci-archive init build-qemu
-# Red Hat CoreOS image (qemu) -- like 'scos' but os=rhcos
-  (and possibly different container images)
+
+# Check what will be built before running
+just info
+
+# Fedora CoreOS container image + qemu disk image
+just build
+just build-qemu
+
+# Fedora CoreOS for Azure
+just build
+just azure
+
+# CentOS Stream CoreOS (SCOS) — uses public OKD base image, no credentials needed
+just os=scos build
+just os=scos build-qemu
+
+# Red Hat CoreOS (RHCOS) — requires Red Hat pull secret and RH VPN network
+export REGISTRY_AUTH_FILE=~/.config/containers/<auth.json>; export RHCOS_REPO="yumrepos url"
+just os=rhcos build
+just os=rhcos build-qemu
+
+# Override component images for testing (via environment variables) using developer branch
+# Eg: Building RHCOS 10.2
+OS: RHCOS
+TEC Config: <fork fedora-coreos-tec-config>
+FCOS Branch: tec-fcos10-rhel10.2
+RHCOS Branch: tec-rhcos10-rhel10.2
+Submodule Branch: tec-fcos10-rhel10.2
+RHCOS_REPO: "yumrepos url" 
 ```
 
 ### Create local Trustee deployment
