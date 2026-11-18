@@ -3,7 +3,7 @@ name: "Build and push trustee-attester container image"
 env:
   NAME: "trustee-attester"
   REGISTRY: "quay.io/trusted-execution-clusters"
-  COMMIT: "v0.17.0"
+  COMMIT: "v0.20.0"
 
 on:
   push:
@@ -41,18 +41,10 @@ jobs:
             base: fedora:rawhide
             variant: standard
             attesters: snp-attester,tdx-attester,az-snp-vtpm-attester,az-tdx-vtpm-attester,tpm-attester
-          - tag: fedora
-            base: fedora:rawhide
-            variant: without-tpm
-            attesters: snp-attester,tdx-attester,az-snp-vtpm-attester,az-tdx-vtpm-attester
           - tag: centos-stream
             base: quay.io/centos/centos:stream9
             variant: standard
             attesters: snp-attester,tdx-attester,az-snp-vtpm-attester,az-tdx-vtpm-attester,tpm-attester
-          - tag: centos-stream
-            base: quay.io/centos/centos:stream9
-            variant: without-tpm
-            attesters: snp-attester,tdx-attester,az-snp-vtpm-attester,az-tdx-vtpm-attester
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
