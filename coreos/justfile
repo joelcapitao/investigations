@@ -41,8 +41,8 @@ cosa_function := '''
             --userns=keep-id:uid=1000,gid=1000 \
             -v=${PWD}:/srv/ --device=/dev/kvm --device=/dev/fuse \
             --tmpfs=/tmp -v=/var/tmp:/var/tmp --name=cosa \
-            ${REGISTRY_AUTH_FILE:+-v=$REGISTRY_AUTH_FILE:$REGISTRY_AUTH_FILE:ro -e REGISTRY_AUTH_FILE} \
-          ${COREOS_ASSEMBLER_CONFIG_GIT:+-v=$COREOS_ASSEMBLER_CONFIG_GIT:/srv/src/config/:ro} \
+            ${REGISTRY_AUTH_FILE:+-v=$REGISTRY_AUTH_FILE:/run/user/1000/containers/auth.json:ro -e REGISTRY_AUTH_FILE=/run/user/1000/containers/auth.json} \
+            ${COREOS_ASSEMBLER_CONFIG_GIT:+-v=$COREOS_ASSEMBLER_CONFIG_GIT:/srv/src/config/:ro} \
             ${COREOS_ASSEMBLER_GIT:+-v=$COREOS_ASSEMBLER_GIT/src/:/usr/lib/coreos-assembler/:ro} \
             ${COREOS_ASSEMBLER_ADD_CERTS:+-v=/etc/pki/ca-trust:/etc/pki/ca-trust:ro} \
             ${COREOS_ASSEMBLER_CONTAINER_RUNTIME_ARGS} \
