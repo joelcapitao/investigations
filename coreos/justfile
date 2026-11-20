@@ -87,6 +87,10 @@ build:
     
     # Initialize cosa with appropriate config
     if [[ -n "${RHCOS_REPO}" ]]; then
+        # we create src/ directory to have the right permissions. This is useful when COREOS_ASSEMBLER_CONFIG_GIT is set.
+        # This var make cosa mount the config repo in src/config. When mounting the volume, it creates src/ with root permissions.
+        mkdir -p src
+        rm -rf src/yumrepos
         cosa init --force \
             --yumrepos "${RHCOS_REPO}" \
             --branch {{rhcos_branch}} \
